@@ -1,0 +1,15 @@
+---
+- hosts: all
+  gather_facts: no
+
+  tasks:
+
+  - name: Get Configuration
+    junos_command:
+      commands:
+        - show configuration
+      display: set
+    register: config
+
+  - name: Show Config
+    debug: var=config

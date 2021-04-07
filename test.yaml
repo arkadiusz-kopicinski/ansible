@@ -1,0 +1,10 @@
+---
+- hosts: all
+  gather_facts: no
+  collections:
+  - junipernetworks.junos
+  tasks:
+    - name: Darag BLACKLIST
+      junipernetworks.junos.junos_config:
+        src: tosend
+        comment: New IP added to BLACKLIST

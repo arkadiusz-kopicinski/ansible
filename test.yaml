@@ -3,6 +3,7 @@
   gather_facts: no
   collections:
   - junipernetworks.junos
+  - ansible.netcommon
   tasks:
     - name: Darag BLACKLIST
       junipernetworks.junos.junos_config:

@@ -2,17 +2,6 @@
 - hosts: all
   gather_facts: no
 
-  vars_prompt:
-    - name: "ansible_user"
-      prompt: "Username"
-      private: no
-      unsafe: yes
-
-    - name: "ansible_password"
-      prompt: "Password"
-      private: yes
-      unsafe: yes
-
   tasks:
     - name: Get uptime
       junos_command:

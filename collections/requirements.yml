@@ -1,4 +1,5 @@
 collections:
   # Install a collection from Ansible Galaxy.
-  - name: junipernetworks.junos
-  - name: ansible.netcommon
+  # - name: junipernetworks.junos
+  # - name: ansible.netcommon
+  - name: community.network

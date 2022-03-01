@@ -1,0 +1,106 @@
+---
+
+  - name: start
+    hosts: all
+    connection: local
+    gather_facts: false
+
+    pre_tasks:
+
+     - name: Include Vault var file
+       include_vars: ns-cred.yml 
+       no_log: true   
+
+    tasks: 
+
+      - name: Git Check
+        delegate_to: localhost
+        git:
+          repo: git@gitlab.com:tas_msp/networking/configuration_backups/netscaler-config-backups.git
+          dest: ./configs
+          version: master
+          key_file: /home/jrasnier/.ssh/id_ed25519
+          accept_hostkey: true
+          force: true
+
+      - name: Ensure a directory exists
+        file:
+          path: ./configs/{{inventory_hostname}}
+          state: directory
+
+      - name: Fetch ns.conf
+        uri:
+          url: "https://{{ansible_host}}/nitro/v1/config/systemfile/ns.conf?args=filelocation:%2Fnsconfig%2F"
+          method: GET
+          status_code: 200
+          validate_certs: no
+          return_content: yes
+          headers:
+            X-NITRO-USER: "{{ns_user}}"
+            X-NITRO-PASS: "{{ns_pass}}"
+        no_log: true
+        register: result
+
+      - name: Save result to config directory
+        copy:
+          content: "{{ result.json.systemfile[0].filecontent }}"
+          dest: "./configs/{{inventory_hostname}}/b64encode-file"
+
+      - name: base64 decode
+        shell: cat "./configs/{{inventory_hostname}}/b64encode-file" | base64 -d > "./config/{{inventory_hostname}}/ns.conf"
+
+      - name: cleanup base64encode file
+        shell: rm "./configs/{{inventory_hostname}}/b64encode-file"
+
+      - name: clear local user passwords
+        delegate_to: localhost
+        replace:
+          path: "./configs/{{inventory_hostname}}/ns.conf"
+          regexp: '(set|add)\s(system user\W.*)'
+          replace: "#Encyrpted username and password OMITTED" 
+
+      - name: clear rpcNode passwords
+        delegate_to: localhost
+        replace:
+          path: "./configs/{{inventory_hostname}}/ns.conf"
+          regexp: '(set)\s(ns rpcNode.*)'
+          replace: "#rpcNode passwords OMITTED"
+
+  - name: Git up to date
+    hosts: localhost
+
+    pre_tasks:
+
+     - name: Include Vault var file
+       include_vars: ns-cred.yml
+
+    
+    tasks:
+
+      - name: Git Add
+        shell: "git add *"
+        args:
+          chdir: ./config
+        register: gitadd
+
+      - debug:
+          msg: "{{gitadd.cmd}}"
+
+      - name: Git Commit
+        shell: git commit -m "Ansible Backup"
+        args:
+          chdir: ./config
+        register: gitcommit
+        #when: git.msg is defined
+
+      - debug:
+          msg: "{{gitcommit}}"
+ 
+      - name: Git Push
+        shell: git push -u origin master 
+        args:
+          chdir: ./config
+        register: gitpush
+        #when: git.msg is defined
+      - debug:
+          msg: "{{gitpush}}"

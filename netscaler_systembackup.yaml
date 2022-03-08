@@ -45,7 +45,6 @@
       copy:
         content='{{ result.json.systemfile[0].filecontent  }}'
         dest="{{ backup_location }}/{{ name }}_{{ lookup('pipe', 'date +%Y%m%d') }}.tgz"
-        owner: root
 
     - name: decode filename
       delegate_to: localhost

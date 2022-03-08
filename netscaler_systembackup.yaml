@@ -3,7 +3,7 @@
 ## 2018 (v.01) - Playbook from www.davideaves.com
 ---
 - name: Netscaler full backup
-  hosts: netscalers
+  hosts: all
   connection: local
   gather_facts: False
 

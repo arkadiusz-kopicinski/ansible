@@ -5,9 +5,11 @@
   gather_facts: False
   vars:
     ansible_python_interpreter: /var/python/bin/python
+    day: '{{ansible_date_time.date}}'
+    filename: "{{name + '-' + day}}"
 
     # Any valid nscli command works
-    nscli_command: "create backup -level full Ansible{{ ('date +%Y%m%d') }}"
+    nscli_command: "create backup -level full {{ filename }}"
 
 
   tasks:
@@ -23,6 +25,6 @@
         msg: "{{ nscli_output }}"
     
     - name: Copy to Linux
-      shell: "scp -i /root/NSkey /var/ns_sys_backup/Ansible.tgz root@10.175.30.113:/tmp/"
+      shell: "scp -i /root/NSkey /var/ns_sys_backup/{{ filename }}.tgz root@10.175.30.113:/tmp/"
       no_log: False
       register: nscli_output

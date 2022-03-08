@@ -2,7 +2,7 @@
 - hosts: all
   remote_user: nsroot
   connection: citrix.adc.ssh_citrix_adc
-  gather_facts: False
+  gather_facts: True
   vars:
     ansible_python_interpreter: /var/python/bin/python
     day: '{{ansible_date_time.date}}'

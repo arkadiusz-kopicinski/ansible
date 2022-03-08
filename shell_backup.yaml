@@ -1,0 +1,23 @@
+---
+- hosts: all
+  remote_user: nsroot
+  connection: citrix.adc.ssh_citrix_adc
+  gather_facts: False
+  vars:
+    ansible_python_interpreter: /var/python/bin/python
+
+    # Any valid nscli command works
+    nscli_command: "create backup -level full Ansible"
+
+
+  tasks:
+    - name: Run nscli command
+      shell: "nscli -s -U :nsroot:{{nitro_pass}} {{ nscli_command }}"
+      no_log: False
+      register: nscli_output
+
+    # Actually insecure for production environments since it will show the nitro_pass variable value.
+    # Used here for demonstration purposes only.
+    - name: Show nscli output
+      debug:
+        msg: "{{ nscli_output }}"

@@ -3,3 +3,4 @@ collections:
   - name: junipernetworks.junos
   - name: ansible.netcommon
   - name: community.network
+  - name: citrix.adc

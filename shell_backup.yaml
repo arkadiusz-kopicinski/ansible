@@ -7,7 +7,7 @@
     ansible_python_interpreter: /var/python/bin/python
 
     # Any valid nscli command works
-    nscli_command: "create backup -level full Ansible"
+    nscli_command: "create backup -level full Ansible{{ ('date +%Y%m%d') }}"
 
 
   tasks:
@@ -21,3 +21,8 @@
     - name: Show nscli output
       debug:
         msg: "{{ nscli_output }}"
+    
+    - name: Copy to Linux
+      shell: "scp -i /root/NSkey /var/ns_sys_backup/Ansible.tgz root@10.175.30.113:/tmp/"
+      no_log: False
+      register: nscli_output

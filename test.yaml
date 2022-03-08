@@ -4,6 +4,7 @@
   collections:
   - junipernetworks.junos
   - ansible.netcommon
+  - citrix.adc
   tasks:
     - name: Darag BLACKLIST
       junipernetworks.junos.junos_config:

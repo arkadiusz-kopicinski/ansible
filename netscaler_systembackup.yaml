@@ -5,7 +5,7 @@
     day: '{{ansible_date_time.date}}'
     time: '{{ansible_date_time.time}}'
     ns_sys_backup: "/var/ns_sys_backup"
-    backup_location: "/tmp"
+    backup_location: "/tmp/full_bck"
 
   tasks:
 

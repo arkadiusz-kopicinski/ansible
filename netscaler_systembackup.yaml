@@ -12,7 +12,7 @@
     ansible_connection: "local"
     ansible_python_interpreter: "/usr/bin/env python"
 
-    backup_location: "/srv/nsbackup"
+    backup_location: "/tmp/nsbackup"
 
     ns_sys_backup: "/var/ns_sys_backup"
 

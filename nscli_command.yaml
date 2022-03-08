@@ -13,7 +13,7 @@
   tasks:
     - name: Run nscli command
       shell: "nscli -s -U :nsroot:{{nitro_pass}} {{ nscli_command }}"
-      no_log: True
+      no_log: False
       register: nscli_output
 
     # Actually insecure for production environments since it will show the nitro_pass variable value.
